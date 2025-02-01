@@ -1,23 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RegistrationWizard.DAL.Models;
-using RegistrationWizard.DAL;
 using Swashbuckle.AspNetCore.Annotations;
 using RegistrationWizard.DTOs;
+using RegistrationWizard.BLL.Commands;
+using MediatR;
 
 namespace RegistrationWizard.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RegistrationController : ControllerBase
+public class RegistrationController(IMediator mediator) : ControllerBase
 {
-    private readonly RegistrationContext _context;
-
-    public RegistrationController(RegistrationContext context)
-    {
-        _context = context;
-    }
-
-
     /// <summary>
     /// Registers a new user.
     /// </summary>
@@ -32,30 +24,38 @@ public class RegistrationController : ControllerBase
         Summary = "Register a new user",
         Description = "Creates a new user record if the provided data is valid."
     )]
-    [SwaggerResponse(200, "Success", typeof(RegisterPostRequestDTO))]
-    [SwaggerResponse(400, "BadRequest", typeof(RegisterPostRequestDTO))]
+    [SwaggerResponse(200, "Success", typeof(RegisterPostResponseDTO))]
+    [SwaggerResponse(400, "BadRequest", typeof(RegisterPostResponseDTO))]
     [SwaggerResponse(500, "Server error", typeof(string))]
-    public async Task<IActionResult> Register([FromBody] User userDto)
+    public async Task<IActionResult> Register([FromBody] UserRequestDTO userDto)
     {
         if (string.IsNullOrWhiteSpace(userDto.Email) ||
             string.IsNullOrWhiteSpace(userDto.Password) ||
             userDto.CountryId <= 0 ||
             userDto.ProvinceId <= 0)
         {
-            return BadRequest(new RegisterPostRequestDTO { Errors = "Invalid data.", IsError = true });
+            return BadRequest(new RegisterPostResponseDTO { Errors = "Invalid data.", IsError = true });
         }
 
         try
         {
-            _context.Users.Add(userDto); //TODO: Move all query in BLL (Services)
-            await _context.SaveChangesAsync();
+            var command = new CreateUserCommand
+            {
+                Email = userDto.Email,
+                Password = userDto.Password,
+                CountryId = userDto.CountryId,
+                ProvinceId = userDto.ProvinceId
+            };
+
+            var createdUser = await mediator.Send(command);
+
         }
         catch (Exception ex)
         {
             return StatusCode(500, new ErrorDTO(ex));
         }
 
-        return Ok(new RegisterPostRequestDTO { Message = "User registered successfully", Success = true });
+        return Ok(new RegisterPostResponseDTO { Message = "User registered successfully", Success = true });
     }
 }
 

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RegistrationWizard.DAL;
 using Swashbuckle.AspNetCore.Annotations;
 using RegistrationWizard.DTOs;
+using MediatR;
+using RegistrationWizard.BLL.Queryes.Countries;
+using RegistrationWizard.BLL.Queryes.Provinces;
 
 namespace RegistrationWizard.Controllers;
 
@@ -10,11 +11,11 @@ namespace RegistrationWizard.Controllers;
 [Route("api/[controller]")]
 public class CountriesController : ControllerBase
 {
-    private readonly RegistrationContext _context;
+    private readonly IMediator _mediator;
 
-    public CountriesController(RegistrationContext context)
+    public CountriesController(IMediator mediator)
     {
-        _context = context;
+        _mediator = mediator;
     }
 
     /// <summary>
@@ -35,7 +36,7 @@ public class CountriesController : ControllerBase
     {
         try
         {
-            var countries = await _context.Countries.ToListAsync(); //TODO: Move all query in BLL (Services)
+            var countries = await _mediator.Send(new GetAllCountriesQuery());
             var result = countries.Select(x => new CountryResponseDTO
             {
                 Id = x.Id,
@@ -79,9 +80,7 @@ public class CountriesController : ControllerBase
     {
         try
         {
-            var provinces = await _context.Provinces //TODO: Move all query in BLL (Services)
-                .Where(p => p.CountryId == countryId)
-                .ToListAsync();
+            var provinces = await _mediator.Send(new GetProvincesByCountryIdQuery(countryId));
 
             var result = provinces.Select(p => new ProvinceResponceDTO
             {

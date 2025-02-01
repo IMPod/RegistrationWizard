@@ -1,8 +1,11 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RegistrationWizard.DAL;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -1,6 +1,6 @@
 ﻿namespace RegistrationWizard.DTOs;
 
-public class RegisterPostRequestDTO
+public class RegisterPostResponseDTO
 {
     public string Message { get; internal set; }
     public string Errors { get; internal set; }
