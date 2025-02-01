@@ -27,7 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RegistrationWizard.BLL\RegistrationWizard.BLL.csproj" />
     <ProjectReference Include="..\RegistrationWizard.DAL\RegistrationWizard.DAL.csproj" />
-    <ProjectReference Include="..\RegistrationWizard\RegistrationWizard.csproj" />
+    <ProjectReference Include="..\RegistrationWizard.Server\RegistrationWizard.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>
