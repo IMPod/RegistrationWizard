@@ -1,0 +1,90 @@
+<!-- src/app/registration-wizard/registration-wizard.component.html -->
+<div *ngIf="!registrationSuccess; else successTemplate">
+  <!-- Step 1: User Credentials -->
+  <div *ngIf="step === 1">
+    <h2>Step 1: User Credentials</h2>
+    <form [formGroup]="step1Form">
+      <div>
+        <label>Email:</label>
+        <input type="email" formControlName="email" />
+        <div *ngIf="step1Form.get('email')?.invalid && step1Form.get('email')?.touched">
+          <small *ngIf="step1Form.get('email')?.errors?.['required']">
+            Email is required.
+          </small>
+          <small *ngIf="step1Form.get('email')?.errors?.['email']">
+            Invalid email format.
+          </small>
+        </div>
+      </div>
+      <div>
+        <label>Password:</label>
+        <input type="password" formControlName="password" />
+        <div *ngIf="step1Form.get('password')?.invalid && step1Form.get('password')?.touched">
+          <small *ngIf="step1Form.get('password')?.errors?.['required']">
+            Password is required.
+          </small>
+          <small *ngIf="step1Form.get('password')?.errors?.['pattern']">
+            Must contain at least one letter and one digit.
+          </small>
+        </div>
+      </div>
+      <div>
+        <label>Confirm Password:</label>
+        <input type="password" formControlName="confirmPassword" />
+        <div *ngIf="(step1Form.errors?.['passwordMismatch'] || step1Form.get('confirmPassword')?.invalid) && step1Form.get('confirmPassword')?.touched">
+          <small>Passwords do not match.</small>
+        </div>
+      </div>
+      <div>
+        <label>
+          <input type="checkbox" formControlName="agree" /> I agree to the terms.
+        </label>
+        <div *ngIf="step1Form.get('agree')?.invalid && step1Form.get('agree')?.touched">
+          <small>You must agree before proceeding.</small>
+        </div>
+      </div>
+      <button type="button" (click)="nextStep()">Next</button>
+    </form>
+  </div>
+
+  <!-- Step 2: Location Information -->
+  <div *ngIf="step === 2">
+    <h2>Step 2: Location Information</h2>
+    <form [formGroup]="step2Form">
+      <div>
+        <label>Country:</label>
+        <select formControlName="countryId" (change)="onCountryChange()">
+          <option value="">Select Country</option>
+          <option *ngFor="let country of countries" [value]="country.id">
+            {{ country.name }}
+          </option>
+        </select>
+        <div *ngIf="step2Form.get('countryId')?.invalid && step2Form.get('countryId')?.touched">
+          <small>Country is required.</small>
+        </div>
+      </div>
+      <div>
+        <label>Province:</label>
+        <select formControlName="provinceId">
+          <option value="">Select Province</option>
+          <option *ngFor="let province of provinces" [value]="province.id">
+            {{ province.name }}
+          </option>
+        </select>
+        <div *ngIf="step2Form.get('provinceId')?.invalid && step2Form.get('provinceId')?.touched">
+          <small>Province is required.</small>
+        </div>
+      </div>
+      <button type="button" (click)="submit()">Save</button>
+    </form>
+  </div>
+
+  <div *ngIf="errorMessage">
+    <p style="color:red">{{ errorMessage }}</p>
+  </div>
+</div>
+
+<ng-template #successTemplate>
+  <h2>Registration Successful!</h2>
+  <p>Your account has been created successfully.</p>
+</ng-template>
