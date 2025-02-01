@@ -35,7 +35,7 @@ public class CountriesController : ControllerBase
     {
         try
         {
-            var countries = await _context.Countries.ToListAsync();
+            var countries = await _context.Countries.ToListAsync(); //TODO: Move all query in BLL (Services)
             var result = countries.Select(x => new CountryResponseDTO
             {
                 Id = x.Id,
@@ -79,7 +79,7 @@ public class CountriesController : ControllerBase
     {
         try
         {
-            var provinces = await _context.Provinces
+            var provinces = await _context.Provinces //TODO: Move all query in BLL (Services)
                 .Where(p => p.CountryId == countryId)
                 .ToListAsync();
 

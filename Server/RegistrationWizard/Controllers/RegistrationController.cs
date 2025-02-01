@@ -47,7 +47,7 @@ public class RegistrationController : ControllerBase
 
         try
         {
-            _context.Users.Add(userDto);
+            _context.Users.Add(userDto); //TODO: Move all query in BLL (Services)
             await _context.SaveChangesAsync();
         }
         catch (Exception ex)
