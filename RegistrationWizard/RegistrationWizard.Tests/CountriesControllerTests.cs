@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using RegistrationWizard.BLL.DTOs;
 using RegistrationWizard.BLL.Queryes.Countries;
 using RegistrationWizard.BLL.Queryes.Provinces;
 using RegistrationWizard.Controllers;
 using RegistrationWizard.DAL.Models;
-using RegistrationWizard.DTOs;
 
 namespace RegistrationWizard.Tests
 {

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RegistrationWizard.BLL.Commands;
+using RegistrationWizard.BLL.DTOs;
 using RegistrationWizard.Controllers;
 using RegistrationWizard.DAL.Models;
-using RegistrationWizard.DTOs;
 
 namespace RegistrationWizard.Tests;
 
@@ -17,7 +17,6 @@ public class RegistrationControllerTests
         var mediatorMock = new Mock<IMediator>();
         var controller = new RegistrationController(mediatorMock.Object);
 
-        // Передаём некорректные данные (пустые поля, неверные идентификаторы)
         var invalidUserRequest = new UserRequestDTO
         {
             Email = "",
@@ -44,7 +43,7 @@ public class RegistrationControllerTests
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new User());
+            .ReturnsAsync(new AppUser());
 
         var controller = new RegistrationController(mediatorMock.Object);
         var validUserRequest = new UserRequestDTO
@@ -64,7 +63,6 @@ public class RegistrationControllerTests
         Assert.True(responseDto.Success);
         Assert.Equal("User registered successfully", responseDto.Message);
 
-        // Проверяем, что команда отправлена с корректными данными
         mediatorMock.Verify(m => m.Send(It.Is<CreateUserCommand>(cmd =>
             cmd.Email == validUserRequest.Email &&
             cmd.Password == validUserRequest.Password &&

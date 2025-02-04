@@ -6,7 +6,7 @@ namespace RegistrationWizard.BLL.Queryes.Users;
 /// <summary>
 /// Query to retrieve a user by its identifier.
 /// </summary>
-public class GetUserByIdQuery : IRequest<User?>
+public class GetUserByIdQuery : IRequest<AppUser?>
 {
     public int UserId { get; set; }
 

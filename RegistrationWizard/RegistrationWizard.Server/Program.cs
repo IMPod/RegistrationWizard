@@ -1,14 +1,15 @@
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RegistrationWizard.BLL.Commands;
 using RegistrationWizard.BLL.Queryes.Countries;
 using RegistrationWizard.BLL.Queryes.Provinces;
 using RegistrationWizard.BLL.Queryes.Users;
 using RegistrationWizard.DAL;
+using RegistrationWizard.DAL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
     typeof(CreateUserCommandHandler).Assembly,
     typeof(GetAllCountriesQueryHandler).Assembly,
@@ -25,6 +26,15 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<RegistrationContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
+
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+{
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = true;
+})
+    .AddEntityFrameworkStores<RegistrationContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddCors(options =>
 {

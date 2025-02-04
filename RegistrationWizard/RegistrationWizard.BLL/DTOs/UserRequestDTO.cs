@@ -1,6 +1,6 @@
-﻿namespace RegistrationWizard.DAL.Models;
+﻿namespace RegistrationWizard.BLL.DTOs;
 
-public class User
+public class UserRequestDTO
 {
     public int Id { get; set; }
     public string Email { get; set; } = null!;

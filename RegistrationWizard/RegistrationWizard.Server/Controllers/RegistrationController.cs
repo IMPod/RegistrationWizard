@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using RegistrationWizard.DTOs;
 using RegistrationWizard.BLL.Commands;
 using MediatR;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.Controllers;
 

@@ -1,14 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RegistrationWizard.DAL.Models;
 
 namespace RegistrationWizard.DAL;
 
-public class RegistrationContext : DbContext
+public class RegistrationContext : IdentityDbContext<AppUser, AppRole, int>
 {
     public RegistrationContext(DbContextOptions<RegistrationContext> options)
-        : base(options) { }
+        : base(options)
+    {
+    }
 
-    public DbSet<User> Users => Set<User>();
     public DbSet<Country> Countries => Set<Country>();
     public DbSet<Province> Provinces => Set<Province>();
 

@@ -1,33 +1,32 @@
 ﻿using MediatR;
 using RegistrationWizard.DAL.Models;
-using RegistrationWizard.DAL;
+using Microsoft.AspNetCore.Identity;
 
 namespace RegistrationWizard.BLL.Commands;
 
 /// <summary>
 /// Command handler for creating a new user.
 /// </summary>
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
+public class CreateUserCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<CreateUserCommand, AppUser>
 {
-    private readonly RegistrationContext _context;
-
-    public CreateUserCommandHandler(RegistrationContext context)
+    public async Task<AppUser> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        _context = context;
-    }
-
-    public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
-    {
-        var user = new User
+        var user = new AppUser
         {
+            UserName = request.Email,
             Email = request.Email,
-            Password = request.Password,
             CountryId = request.CountryId,
             ProvinceId = request.ProvinceId
         };
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync(cancellationToken);
+        var result = await userManager.CreateAsync(user, request.Password);
+
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new Exception($"User creation failed: {errors}");
+        }
+
         return user;
     }
 }

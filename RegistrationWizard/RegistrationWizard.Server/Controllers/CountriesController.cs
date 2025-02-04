@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using RegistrationWizard.DTOs;
 using MediatR;
 using RegistrationWizard.BLL.Queryes.Countries;
 using RegistrationWizard.BLL.Queryes.Provinces;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.Controllers;
 

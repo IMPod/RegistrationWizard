@@ -1,4 +1,4 @@
-﻿namespace RegistrationWizard.DTOs;
+﻿namespace RegistrationWizard.BLL.DTOs;
 
 public class ProvinceResponceDTO
 {

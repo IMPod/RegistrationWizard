@@ -1,9 +1,12 @@
 <!-- src/app/registration-wizard/registration-wizard.component.html -->
+
 <div *ngIf="!registrationSuccess; else successTemplate">
   <!-- Step 1: User Credentials -->
   <div *ngIf="step === 1">
     <h2>Step 1: User Credentials</h2>
     <form [formGroup]="step1Form">
+
+      <!-- Email -->
       <div>
         <label>Email:</label>
         <input type="email" formControlName="email" />
@@ -16,34 +19,55 @@
           </small>
         </div>
       </div>
+
+      <!-- Password -->
       <div>
         <label>Password:</label>
-        <input type="password" formControlName="password" />
+        <input type="password"
+               formControlName="password"
+               (blur)="step1Form.get('password')?.markAsTouched()" />
         <div *ngIf="step1Form.get('password')?.invalid && step1Form.get('password')?.touched">
           <small *ngIf="step1Form.get('password')?.errors?.['required']">
             Password is required.
           </small>
-          <small *ngIf="step1Form.get('password')?.errors?.['pattern']">
-            Must contain at least one letter and one digit.
-          </small>
+          <ng-container *ngIf="step1Form.get('password')?.errors?.['strength'] as pwErrors">
+            <div *ngFor="let errMsg of pwErrors">
+              <small>{{ errMsg }}</small>
+            </div>
+          </ng-container>
         </div>
       </div>
+
+      <!-- Confirm Password -->
       <div>
         <label>Confirm Password:</label>
-        <input type="password" formControlName="confirmPassword" />
-        <div *ngIf="(step1Form.errors?.['passwordMismatch'] || step1Form.get('confirmPassword')?.invalid) && step1Form.get('confirmPassword')?.touched">
+        <input type="password"
+               formControlName="confirmPassword"
+               (blur)="step1Form.get('confirmPassword')?.markAsTouched()" />
+        <div *ngIf="(step1Form.errors?.['passwordMismatch']
+                  || step1Form.get('confirmPassword')?.invalid)
+                  && step1Form.get('confirmPassword')?.touched">
           <small>Passwords do not match.</small>
         </div>
       </div>
+
+      <!-- Agree checkbox -->
       <div>
         <label>
-          <input type="checkbox" formControlName="agree" /> I agree to the terms.
+          <input type="checkbox" formControlName="agree" />
+          I agree to the terms.
         </label>
         <div *ngIf="step1Form.get('agree')?.invalid && step1Form.get('agree')?.touched">
           <small>You must agree before proceeding.</small>
         </div>
       </div>
-      <button type="button" (click)="nextStep()">Next</button>
+
+      <!-- "Next" button -->
+      <button type="button"
+              (click)="nextStep()"
+              [disabled]="step1Form.invalid">
+        Next
+      </button>
     </form>
   </div>
 
@@ -63,6 +87,7 @@
           <small>Country is required.</small>
         </div>
       </div>
+
       <div>
         <label>Province:</label>
         <select formControlName="provinceId">
@@ -75,6 +100,7 @@
           <small>Province is required.</small>
         </div>
       </div>
+
       <button type="button" (click)="submit()">Save</button>
     </form>
   </div>

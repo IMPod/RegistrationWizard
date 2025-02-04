@@ -8,7 +8,7 @@ namespace RegistrationWizard.BLL.Queryes.Users;
 /// <summary>
 /// Query handler to retrieve a user by its identifier.
 /// </summary>
-public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User?>
+public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, AppUser?>
 {
     private readonly RegistrationContext _context;
 
@@ -17,7 +17,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, User?>
         _context = context;
     }
 
-    public async Task<User?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<AppUser?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         return await _context.Users
             .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
