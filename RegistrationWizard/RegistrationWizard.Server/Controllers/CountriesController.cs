@@ -9,15 +9,8 @@ namespace RegistrationWizard.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CountriesController : ControllerBase
+public class CountriesController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public CountriesController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     /// <summary>
     /// Retrieves the list of countries along with their provinces.
     /// </summary>
@@ -34,20 +27,13 @@ public class CountriesController : ControllerBase
     [SwaggerResponse(500, "Server error", typeof(string))]
     public async Task<IActionResult> GetCountries()
     {
-        try
-        {
-            var result = await _mediator.Send(new GetAllCountriesQuery());
+        var result = await mediator.Send(new GetAllCountriesQuery());
 
-            var responce = new BaseResponseDTO<CountryResponseDTO>()
-            {
-                Data = result.ToList()
-            };
-            return Ok(responce);
-        }
-        catch (Exception ex)
+        var responce = new BaseResponseDTO<CountryResponseDTO>()
         {
-            return StatusCode(500, new ErrorDTO(ex));
-        }
+            Data = result.ToList()
+        };
+        return Ok(responce);
     }
 
     /// <summary>
@@ -67,19 +53,12 @@ public class CountriesController : ControllerBase
     [SwaggerResponse(500, "Server error", typeof(string))]
     public async Task<IActionResult> GetProvincesByCountry(int countryId)
     {
-        try
-        {
-            var provinces = await _mediator.Send(new GetProvincesByCountryIdQuery(countryId));
+        var provinces = await mediator.Send(new GetProvincesByCountryIdQuery(countryId));
 
-            var response = new BaseResponseDTO<ProvinceResponceDTO>()
-            {
-                Data = provinces.ToList()
-            };
-            return Ok(response);
-        }
-        catch (Exception ex)
+        var response = new BaseResponseDTO<ProvinceResponceDTO>()
         {
-            return StatusCode(500, new ErrorDTO(ex));
-        }
+            Data = provinces.ToList()
+        };
+        return Ok(response);
     }
 }

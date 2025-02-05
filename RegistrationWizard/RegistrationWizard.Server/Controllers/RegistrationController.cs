@@ -37,24 +37,15 @@ public class RegistrationController(IMediator mediator) : ControllerBase
             return BadRequest(new RegisterPostResponseDTO { Errors = "Invalid data.", IsError = true });
         }
 
-        try
+        var command = new CreateUserCommand
         {
-            var command = new CreateUserCommand
-            {
-                Email = userDto.Email,
-                Password = userDto.Password,
-                CountryId = userDto.CountryId,
-                ProvinceId = userDto.ProvinceId
-            };
+            Email = userDto.Email,
+            Password = userDto.Password,
+            CountryId = userDto.CountryId,
+            ProvinceId = userDto.ProvinceId
+        };
 
-            var createdUser = await mediator.Send(command);
-
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new ErrorDTO(ex));
-        }
-
+        var createdUser = await mediator.Send(command);
         return Ok(new RegisterPostResponseDTO { Message = "User registered successfully", Success = true });
     }
 }

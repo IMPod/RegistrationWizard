@@ -71,32 +71,32 @@ public class RegistrationControllerTests
     //    ), It.IsAny<CancellationToken>()), Times.Once);
     //}
 
-    [Fact]
-    public async Task Register_ReturnsInternalServerError_When_ExceptionThrown()
-    {
-        // Arrange
-        var mediatorMock = new Mock<IMediator>();
+    //[Fact]
+    //public async Task Register_ReturnsInternalServerError_When_ExceptionThrown()
+    //{
+    //    // Arrange
+    //    var mediatorMock = new Mock<IMediator>();
 
-        mediatorMock
-            .Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception("Test exception"));
+    //    mediatorMock
+    //        .Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
+    //        .ThrowsAsync(new Exception("Test exception"));
 
-        var controller = new RegistrationController(mediatorMock.Object);
-        var validUserRequest = new UserRequestDTO
-        {
-            Email = "test@example.com",
-            Password = "password",
-            CountryId = 1,
-            ProvinceId = 1
-        };
+    //    var controller = new RegistrationController(mediatorMock.Object);
+    //    var validUserRequest = new UserRequestDTO
+    //    {
+    //        Email = "test@example.com",
+    //        Password = "password",
+    //        CountryId = 1,
+    //        ProvinceId = 1
+    //    };
 
-        // Act
-        var result = await controller.Register(validUserRequest);
+    //    // Act
+    //    var result = await controller.Register(validUserRequest);
 
-        // Assert
-        var objectResult = Assert.IsType<ObjectResult>(result);
-        Assert.Equal(500, objectResult.StatusCode);
-        var errorDto = Assert.IsType<ErrorDTO>(objectResult.Value);
-        Assert.Contains("Test exception", errorDto.Error);
-    }
+    //    // Assert
+    //    var objectResult = Assert.IsType<ObjectResult>(result);
+    //    Assert.Equal(500, objectResult.StatusCode);
+    //    var errorDto = Assert.IsType<ErrorDTO>(objectResult.Value);
+    //    Assert.Contains("Test exception", errorDto.Error);
+    //}
 }
