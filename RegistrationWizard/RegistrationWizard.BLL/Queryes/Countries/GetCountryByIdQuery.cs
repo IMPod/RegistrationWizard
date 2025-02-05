@@ -6,7 +6,7 @@ namespace RegistrationWizard.BLL.Queryes.Countries;
 /// <summary>
 /// Query to retrieve a country by its identifier.
 /// </summary>
-public class GetCountryByIdQuery : IRequest<List<CountryResponseDTO>?>
+public class GetCountryByIdQuery : IRequest<CountryResponseDTO?>
 {
     public int CountryId { get; set; }
 

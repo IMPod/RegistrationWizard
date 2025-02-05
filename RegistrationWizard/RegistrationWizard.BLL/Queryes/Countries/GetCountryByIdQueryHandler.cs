@@ -9,15 +9,15 @@ namespace RegistrationWizard.BLL.Queryes.Countries;
 /// <summary>
 /// Query handler to retrieve a country by its identifier.
 /// </summary>
-public class GetCountryByIdQueryHandler(RegistrationContext context, IMapper mapper) : IRequestHandler<GetCountryByIdQuery, List<CountryResponseDTO>?>
+public class GetCountryByIdQueryHandler(RegistrationContext context, IMapper mapper) : IRequestHandler<GetCountryByIdQuery, CountryResponseDTO?>
 {
-    public async Task<List<CountryResponseDTO>?> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
+    public async Task<CountryResponseDTO?> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
     {
-        var countries = await context.Countries
+        var country = await context.Countries
             .Include(c => c.Provinces)
             .FirstOrDefaultAsync(c => c.Id == request.CountryId, cancellationToken);
 
-        var resultDto = mapper.Map<List<CountryResponseDTO>>(countries).ToList();
+        var resultDto = mapper.Map<CountryResponseDTO>(country);
 
         return resultDto;
     }
