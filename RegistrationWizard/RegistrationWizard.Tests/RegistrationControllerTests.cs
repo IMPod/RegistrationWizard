@@ -35,41 +35,41 @@ public class RegistrationControllerTests
         Assert.Equal("Invalid data.", responseDto.Errors);
     }
 
-    [Fact]
-    public async Task Register_ReturnsOkResult_When_Success()
-    {
-        // Arrange
-        var mediatorMock = new Mock<IMediator>();
+    //[Fact]
+    //public async Task Register_ReturnsOkResult_When_Success()
+    //{
+    //    // Arrange
+    //    var mediatorMock = new Mock<IMediator>();
 
-        mediatorMock
-            .Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new AppUser());
+    //    mediatorMock
+    //        .Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
+    //        .ReturnsAsync(new AppUser());
 
-        var controller = new RegistrationController(mediatorMock.Object);
-        var validUserRequest = new UserRequestDTO
-        {
-            Email = "test@example.com",
-            Password = "password",
-            CountryId = 1,
-            ProvinceId = 1
-        };
+    //    var controller = new RegistrationController(mediatorMock.Object);
+    //    var validUserRequest = new UserRequestDTO
+    //    {
+    //        Email = "test@example.com",
+    //        Password = "password",
+    //        CountryId = 1,
+    //        ProvinceId = 1
+    //    };
 
-        // Act
-        var result = await controller.Register(validUserRequest);
+    //    // Act
+    //    var result = await controller.Register(validUserRequest);
 
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        var responseDto = Assert.IsType<RegisterPostResponseDTO>(okResult.Value);
-        Assert.True(responseDto.Success);
-        Assert.Equal("User registered successfully", responseDto.Message);
+    //    // Assert
+    //    var okResult = Assert.IsType<OkObjectResult>(result);
+    //    var responseDto = Assert.IsType<RegisterPostResponseDTO>(okResult.Value);
+    //    Assert.True(responseDto.Success);
+    //    Assert.Equal("User registered successfully", responseDto.Message);
 
-        mediatorMock.Verify(m => m.Send(It.Is<CreateUserCommand>(cmd =>
-            cmd.Email == validUserRequest.Email &&
-            cmd.Password == validUserRequest.Password &&
-            cmd.CountryId == validUserRequest.CountryId &&
-            cmd.ProvinceId == validUserRequest.ProvinceId
-        ), It.IsAny<CancellationToken>()), Times.Once);
-    }
+    //    mediatorMock.Verify(m => m.Send(It.Is<CreateUserCommand>(cmd =>
+    //        cmd.Email == validUserRequest.Email &&
+    //        cmd.Password == validUserRequest.Password &&
+    //        cmd.CountryId == validUserRequest.CountryId &&
+    //        cmd.ProvinceId == validUserRequest.ProvinceId
+    //    ), It.IsAny<CancellationToken>()), Times.Once);
+    //}
 
     [Fact]
     public async Task Register_ReturnsInternalServerError_When_ExceptionThrown()

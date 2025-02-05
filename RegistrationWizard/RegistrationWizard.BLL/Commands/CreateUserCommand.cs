@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using RegistrationWizard.DAL.Models;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.BLL.Commands;
 
 /// <summary>
 /// Command for creating a new user.
 /// </summary>
-public class CreateUserCommand : IRequest<AppUser>
+public class CreateUserCommand : IRequest<UserRequestDTO>
 {
     public string UserName { get; set; }
     public string Email { get; set; } = default!;

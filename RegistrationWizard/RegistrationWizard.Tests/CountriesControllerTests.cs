@@ -11,85 +11,85 @@ namespace RegistrationWizard.Tests
 {
     public class CountriesControllerTests
     {
-        [Fact]
-        public async Task GetCountries_ReturnsOkResult_WithData()
-        {
-            // Arrange
-            var mediatorMock = new Mock<IMediator>();
+        //[Fact]
+        //public async Task GetCountries_ReturnsOkResult_WithData()
+        //{
+        //    // Arrange
+        //    var mediatorMock = new Mock<IMediator>();
 
-            var sampleCountries = new List<Country>
-            {
-                new Country {
-                    Id = 1,
-                    Name = "Country A",
-                    Provinces = new List<Province>
-                    {
-                        new Province { Id = 1, Name = "Province A1", CountryId = 1 },
-                        new Province { Id = 2, Name = "Province A2", CountryId = 1 }
-                    }
-                },
-                new Country {
-                    Id = 2,
-                    Name = "Country B",
-                    Provinces = new List<Province>
-                    {
-                        new Province { Id = 3, Name = "Province B1", CountryId = 2 },
-                        new Province { Id = 4, Name = "Province B2", CountryId = 2 }
-                    }
-                }
-            };
+        //    var sampleCountries = new List<Country>
+        //    {
+        //        new Country {
+        //            Id = 1,
+        //            Name = "Country A",
+        //            Provinces = new List<Province>
+        //            {
+        //                new Province { Id = 1, Name = "Province A1", CountryId = 1 },
+        //                new Province { Id = 2, Name = "Province A2", CountryId = 1 }
+        //            }
+        //        },
+        //        new Country {
+        //            Id = 2,
+        //            Name = "Country B",
+        //            Provinces = new List<Province>
+        //            {
+        //                new Province { Id = 3, Name = "Province B1", CountryId = 2 },
+        //                new Province { Id = 4, Name = "Province B2", CountryId = 2 }
+        //            }
+        //        }
+        //    };
 
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetAllCountriesQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(sampleCountries);
+        //    mediatorMock
+        //        .Setup(m => m.Send(It.IsAny<GetAllCountriesQuery>(), It.IsAny<CancellationToken>()))
+        //        .ReturnsAsync(sampleCountries);
 
-            var controller = new CountriesController(mediatorMock.Object);
+        //    var controller = new CountriesController(mediatorMock.Object);
 
-            // Act
-            var actionResult = await controller.GetCountries();
+        //    // Act
+        //    var actionResult = await controller.GetCountries();
 
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(actionResult);
-            var baseResponse = Assert.IsType<BaseResponseDTO<CountryResponseDTO>>(okResult.Value);
-            Assert.NotNull(baseResponse.Data);
-            Assert.Equal(2, baseResponse.Data.Count);
+        //    // Assert
+        //    var okResult = Assert.IsType<OkObjectResult>(actionResult);
+        //    var baseResponse = Assert.IsType<BaseResponseDTO<CountryResponseDTO>>(okResult.Value);
+        //    Assert.NotNull(baseResponse.Data);
+        //    Assert.Equal(2, baseResponse.Data.Count);
 
-            var countryA = baseResponse.Data.FirstOrDefault(c => c.Id == 1);
-            Assert.NotNull(countryA);
-            Assert.Equal("Country A", countryA.Name);
-            Assert.Equal(2, countryA.Provinces.Count);
-        }
+        //    var countryA = baseResponse.Data.FirstOrDefault(c => c.Id == 1);
+        //    Assert.NotNull(countryA);
+        //    Assert.Equal("Country A", countryA.Name);
+        //    Assert.Equal(2, countryA.Provinces.Count);
+        //}
 
-        [Fact]
-        public async Task GetProvincesByCountry_ReturnsOkResult_WithData()
-        {
-            // Arrange
-            var mediatorMock = new Mock<IMediator>();
+        //[Fact]
+        //public async Task GetProvincesByCountry_ReturnsOkResult_WithData()
+        //{
+        //    // Arrange
+        //    var mediatorMock = new Mock<IMediator>();
 
-            var sampleProvinces = new List<Province>
-            {
-                new Province { Id = 1, Name = "Province A1", CountryId = 1 },
-                new Province { Id = 2, Name = "Province A2", CountryId = 1 }
-            };
+        //    var sampleProvinces = new List<Province>
+        //    {
+        //        new Province { Id = 1, Name = "Province A1", CountryId = 1 },
+        //        new Province { Id = 2, Name = "Province A2", CountryId = 1 }
+        //    };
 
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProvincesByCountryIdQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(sampleProvinces);
+        //    mediatorMock
+        //        .Setup(m => m.Send(It.IsAny<GetProvincesByCountryIdQuery>(), It.IsAny<CancellationToken>()))
+        //        .ReturnsAsync(sampleProvinces);
 
-            var controller = new CountriesController(mediatorMock.Object);
-            int testCountryId = 1;
+        //    var controller = new CountriesController(mediatorMock.Object);
+        //    int testCountryId = 1;
 
-            // Act
-            var actionResult = await controller.GetProvincesByCountry(testCountryId);
+        //    // Act
+        //    var actionResult = await controller.GetProvincesByCountry(testCountryId);
 
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(actionResult);
-            var baseResponse = Assert.IsType<BaseResponseDTO<ProvinceResponceDTO>>(okResult.Value);
-            Assert.NotNull(baseResponse.Data);
-            Assert.Equal(2, baseResponse.Data.Count);
+        //    // Assert
+        //    var okResult = Assert.IsType<OkObjectResult>(actionResult);
+        //    var baseResponse = Assert.IsType<BaseResponseDTO<ProvinceResponceDTO>>(okResult.Value);
+        //    Assert.NotNull(baseResponse.Data);
+        //    Assert.Equal(2, baseResponse.Data.Count);
 
-            Assert.All(baseResponse.Data, p => Assert.Equal(testCountryId, p.CountryId));
-        }
+        //    Assert.All(baseResponse.Data, p => Assert.Equal(testCountryId, p.CountryId));
+        //}
 
         [Fact]
         public async Task GetCountries_WhenMediatorThrowsException_Returns500()

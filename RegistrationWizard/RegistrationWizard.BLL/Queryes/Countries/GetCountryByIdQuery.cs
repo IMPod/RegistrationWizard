@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using RegistrationWizard.DAL.Models;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.BLL.Queryes.Countries;
 
 /// <summary>
 /// Query to retrieve a country by its identifier.
 /// </summary>
-public class GetCountryByIdQuery : IRequest<Country?>
+public class GetCountryByIdQuery : IRequest<List<CountryResponseDTO>?>
 {
     public int CountryId { get; set; }
 

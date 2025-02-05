@@ -1,24 +1,23 @@
 ﻿using MediatR;
-using RegistrationWizard.DAL.Models;
 using RegistrationWizard.DAL;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.BLL.Queryes.Provinces;
 
 /// <summary>
 /// Query handler to retrieve all provinces.
 /// </summary>
-public class GetAllProvincesQueryHandler : IRequestHandler<GetAllProvincesQuery, IEnumerable<Province>>
+public class GetAllProvincesQueryHandler(RegistrationContext context, IMapper mapper) : IRequestHandler<GetAllProvincesQuery, IEnumerable<ProvinceResponceDTO>>
 {
-    private readonly RegistrationContext _context;
-
-    public GetAllProvincesQueryHandler(RegistrationContext context)
+    public async Task<IEnumerable<ProvinceResponceDTO>> Handle(GetAllProvincesQuery request, CancellationToken cancellationToken)
     {
-        _context = context;
-    }
 
-    public async Task<IEnumerable<Province>> Handle(GetAllProvincesQuery request, CancellationToken cancellationToken)
-    {
-        return await _context.Provinces.ToListAsync(cancellationToken);
+        var provinces = await context.Provinces
+           .ToListAsync(cancellationToken);
+
+        var resultDto = mapper.Map<List<ProvinceResponceDTO>>(provinces);
+        return resultDto;
     }
 }

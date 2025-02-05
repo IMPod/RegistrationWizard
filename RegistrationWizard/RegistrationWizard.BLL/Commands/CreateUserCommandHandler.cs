@@ -1,15 +1,16 @@
 ﻿using MediatR;
 using RegistrationWizard.DAL.Models;
 using Microsoft.AspNetCore.Identity;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.BLL.Commands;
 
 /// <summary>
 /// Command handler for creating a new user.
 /// </summary>
-public class CreateUserCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<CreateUserCommand, AppUser>
+public class CreateUserCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<CreateUserCommand, UserRequestDTO>
 {
-    public async Task<AppUser> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<UserRequestDTO> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var user = new AppUser
         {
@@ -27,6 +28,6 @@ public class CreateUserCommandHandler(UserManager<AppUser> userManager) : IReque
             throw new Exception($"User creation failed: {errors}");
         }
 
-        return user;
+        return new UserRequestDTO();
     }
 }

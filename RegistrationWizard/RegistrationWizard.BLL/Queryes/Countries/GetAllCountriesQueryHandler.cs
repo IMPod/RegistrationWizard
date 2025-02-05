@@ -1,26 +1,24 @@
 ﻿using MediatR;
-using RegistrationWizard.DAL.Models;
 using RegistrationWizard.DAL;
 using Microsoft.EntityFrameworkCore;
+using RegistrationWizard.BLL.DTOs;
+using AutoMapper;
 
 namespace RegistrationWizard.BLL.Queryes.Countries;
 
 /// <summary>
 /// Query handler to retrieve all countries.
 /// </summary>
-public class GetAllCountriesQueryHandler : IRequestHandler<GetAllCountriesQuery, IEnumerable<Country>>
+public class GetAllCountriesQueryHandler(RegistrationContext context, IMapper mapper) : IRequestHandler<GetAllCountriesQuery, IEnumerable<CountryResponseDTO>>
 {
-    private readonly RegistrationContext _context;
-
-    public GetAllCountriesQueryHandler(RegistrationContext context)
+    public async Task<IEnumerable<CountryResponseDTO>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
     {
-        _context = context;
-    }
-
-    public async Task<IEnumerable<Country>> Handle(GetAllCountriesQuery request, CancellationToken cancellationToken)
-    {
-        return await _context.Countries
+        var countries = await context.Countries
             .Include(c => c.Provinces)
             .ToListAsync(cancellationToken);
+
+
+        var resultDto = mapper.Map<List<CountryResponseDTO>>(countries);
+        return resultDto;
     }
 }

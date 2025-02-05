@@ -36,22 +36,11 @@ public class CountriesController : ControllerBase
     {
         try
         {
-            var countries = await _mediator.Send(new GetAllCountriesQuery());
-            var result = countries.Select(x => new CountryResponseDTO
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Provinces = x.Provinces.Select(p=> new ProvinceResponceDTO()
-                {
-                    Id=p.Id,
-                    Name = p.Name,
-                    CountryId = p.CountryId,
-                }).ToList(),
-            }).ToList();
+            var result = await _mediator.Send(new GetAllCountriesQuery());
 
             var responce = new BaseResponseDTO<CountryResponseDTO>()
             {
-                Data = result
+                Data = result.ToList()
             };
             return Ok(responce);
         }
@@ -82,16 +71,9 @@ public class CountriesController : ControllerBase
         {
             var provinces = await _mediator.Send(new GetProvincesByCountryIdQuery(countryId));
 
-            var result = provinces.Select(p => new ProvinceResponceDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                CountryId = p.CountryId,
-            }).ToList();
-
             var response = new BaseResponseDTO<ProvinceResponceDTO>()
             {
-                Data = result
+                Data = provinces.ToList()
             };
             return Ok(response);
         }

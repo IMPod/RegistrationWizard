@@ -1,12 +1,12 @@
 ﻿using MediatR;
-using RegistrationWizard.DAL.Models;
+using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.BLL.Queryes.Provinces;
 
 /// <summary>
 /// Query to retrieve a province by its identifier.
 /// </summary>
-public class GetProvinceByIdQuery : IRequest<Province?>
+public class GetProvinceByIdQuery : IRequest<ProvinceResponceDTO?>
 {
     public int ProvinceId { get; set; }
 

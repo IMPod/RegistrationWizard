@@ -1,28 +1,22 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using RegistrationWizard.BLL.Commands;
-using RegistrationWizard.BLL.Queryes.Countries;
-using RegistrationWizard.BLL.Queryes.Provinces;
-using RegistrationWizard.BLL.Queryes.Users;
+using RegistrationWizard.BLL.Mapper;
 using RegistrationWizard.DAL;
 using RegistrationWizard.DAL.Models;
+using RegistrationWizard.BLL;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-    typeof(CreateUserCommandHandler).Assembly,
-    typeof(GetAllCountriesQueryHandler).Assembly,
-    typeof(GetCountryByIdQueryHandler).Assembly,
-    typeof(GetAllProvincesQueryHandler).Assembly,
-    typeof(GetProvinceByIdQueryHandler).Assembly,
-    typeof(GetProvincesByCountryIdQueryHandler).Assembly,
-    typeof(GetUserByIdQueryHandler).Assembly
-));
+//if set only Assembly.GetExecutingAssembly() =>RegistrationWizard.BLL not loaded and MediatoR not work normal
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(MediatRCommandAssemblyMarker).Assembly));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddDbContext<RegistrationContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection")));
