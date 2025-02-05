@@ -1,9 +1,9 @@
 // src/app/registration-wizard/registration-wizard.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormControl,
   Validators,
   AbstractControl,
   ValidatorFn
@@ -11,7 +11,19 @@ import {
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrationService } from '../services/registration.service';
-import { CountriesService } from '../services/countries.service';
+import { CountriesService, Country, Province } from '../services/countries.service';
+
+interface Step1FormModel {
+  email: FormControl<string | null>;
+  password: FormControl<string | null>;
+  confirmPassword: FormControl<string | null>;
+  agree: FormControl<boolean | null>;
+}
+
+interface Step2FormModel {
+  countryId: FormControl<number | null>;
+  provinceId: FormControl<number | null>;
+}
 
 @Component({
   selector: 'app-registration-wizard',
@@ -21,11 +33,11 @@ import { CountriesService } from '../services/countries.service';
   imports: [CommonModule, ReactiveFormsModule]
 })
 export class RegistrationWizardComponent implements OnInit {
-  step1Form!: FormGroup;
-  step2Form!: FormGroup;
+  step1Form!: FormGroup<Step1FormModel>;
+  step2Form!: FormGroup<Step2FormModel>;
   step = 1;
-  countries: any[] = [];
-  provinces: any[] = [];
+  countries: Country[] = [];
+  provinces: Province[] = [];
   registrationSuccess = false;
   errorMessage = '';
 
@@ -40,37 +52,29 @@ export class RegistrationWizardComponent implements OnInit {
       {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, this.strongPasswordValidator]],
-        confirmPassword: ['', Validators.required],
-        agree: [false, Validators.requiredTrue]
+        confirmPassword: ['', [Validators.required]],
+        agree: [false, [Validators.requiredTrue]]
       },
       { validators: this.passwordMatchValidator }
-    );
+    ) as FormGroup<Step1FormModel>;
 
     this.step2Form = this.fb.group({
       countryId: [null, Validators.required],
       provinceId: [null, Validators.required]
-    });
+    }) as FormGroup<Step2FormModel>;
 
     this.loadCountries();
   }
 
   private loadCountries(): void {
-    let retries = 0;
-    const interval = setInterval(() => {
-      this.countriesService.getCountries().subscribe(
-        (data) => {
-          this.countries = data.data;
-          clearInterval(interval);
-        },
-        (err) => {
-          retries++;
-          if (retries > 5) {
-            console.error('Error loading countries:', err);
-            clearInterval(interval);
-          }
-        }
-      );
-    }, 2000);
+    this.countriesService.getCountries().subscribe({
+      next: (response) => {
+        this.countries = response.data;
+      },
+      error: (err) => {
+        console.error('Error loading countries:', err);
+      }
+    });
   }
 
   strongPasswordValidator(control: AbstractControl) {
@@ -78,7 +82,6 @@ export class RegistrationWizardComponent implements OnInit {
     if (!value) {
       return null;
     }
-
     const errors: string[] = [];
     if (value.length < 6) {
       errors.push('Passwords must be at least 6 characters.');
@@ -95,7 +98,6 @@ export class RegistrationWizardComponent implements OnInit {
     if (!/[^A-Za-z0-9]/.test(value)) {
       errors.push('Passwords must have at least one non-alphanumeric character.');
     }
-
     return errors.length > 0 ? { strength: errors } : null;
   }
 
@@ -119,18 +121,18 @@ export class RegistrationWizardComponent implements OnInit {
   onCountryChange(): void {
     const countryId = this.step2Form.get('countryId')?.value;
     if (countryId) {
-      this.countriesService.getProvincesByCountry(countryId).subscribe(
-        (data) => {
-          this.provinces = data.data;
+      this.countriesService.getProvincesByCountry(countryId).subscribe({
+        next: (response) => {
+          this.provinces = response.data;
           this.step2Form.get('provinceId')?.setValue(null);
         },
-        (err) => console.error('Error loading provinces', err)
-      );
+        error: (err) => console.error('Error loading provinces', err)
+      });
     }
   }
 
   submit(): void {
-    if (this.step2Form.valid) {
+    if (this.step2Form.valid && this.step1Form.valid) {
       const registrationData = {
         email: this.step1Form.get('email')?.value,
         password: this.step1Form.get('password')?.value,
@@ -138,20 +140,19 @@ export class RegistrationWizardComponent implements OnInit {
         provinceId: this.step2Form.get('provinceId')?.value
       };
 
-      this.registrationService.register(registrationData).subscribe(
-        (res) => {
+      this.registrationService.register(registrationData).subscribe({
+        next: (res) => {
           if (res.success) {
             this.registrationSuccess = true;
           }
         },
-        (err) => {
-          // Например, если сервер вернёт ошибку "User creation failed:
-          // Passwords must have..." - можно показать её тут
+        error: (err) => {
           this.errorMessage = err.error?.error || 'Registration failed.';
         }
-      );
+      });
     } else {
       this.step2Form.markAllAsTouched();
+      this.step1Form.markAllAsTouched();
     }
   }
 }
