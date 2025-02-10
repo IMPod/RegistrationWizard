@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RegistrationWizard.DAL.Models;
 
-namespace RegistrationWizard.BLL.Queryes.Users;
+namespace RegistrationWizard.BLL.Queries.Users;
 
 /// <summary>
 /// Query to retrieve a user by its identifier.

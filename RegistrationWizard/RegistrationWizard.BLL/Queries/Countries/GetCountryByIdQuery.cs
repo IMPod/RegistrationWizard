@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RegistrationWizard.BLL.DTOs;
 
-namespace RegistrationWizard.BLL.Queryes.Countries;
+namespace RegistrationWizard.BLL.Queries.Countries;
 
 /// <summary>
 /// Query to retrieve a country by its identifier.

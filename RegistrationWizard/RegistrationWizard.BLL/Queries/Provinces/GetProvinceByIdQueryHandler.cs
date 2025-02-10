@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using RegistrationWizard.BLL.DTOs;
 
-namespace RegistrationWizard.BLL.Queryes.Provinces;
+namespace RegistrationWizard.BLL.Queries.Provinces;
 
 /// <summary>
 /// Query handler to retrieve a province by its identifier.

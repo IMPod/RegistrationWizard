@@ -1,10 +1,10 @@
 ﻿namespace RegistrationWizard.BLL.DTOs;
 
-public class UserRequestDTO
+public class UserRequestDto
 {
-    public int Id { get; set; }
-    public string Email { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    public int CountryId { get; set; }
-    public int ProvinceId { get; set; }
+    public int Id { get; init; }
+    public required string Email { get; init; }
+    public required string Password { get; init; }
+    public required int CountryId { get; init; }
+    public required int ProvinceId { get; init; }
 }

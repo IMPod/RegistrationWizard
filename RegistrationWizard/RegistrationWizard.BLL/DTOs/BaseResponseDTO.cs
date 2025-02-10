@@ -1,6 +1,6 @@
 ﻿namespace RegistrationWizard.BLL.DTOs;
 
-public class BaseResponseDTO<T>
+public class BaseResponseDto<T>
 {
-    public List<T> Data { get; set; }
+    public required List<T> Data { get; init; }
 }

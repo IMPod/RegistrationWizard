@@ -4,7 +4,7 @@ using RegistrationWizard.BLL.Commands;
 using MediatR;
 using RegistrationWizard.BLL.DTOs;
 
-namespace RegistrationWizard.Controllers;
+namespace RegistrationWizard.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,6 +14,7 @@ public class RegistrationController(IMediator mediator) : ControllerBase
     /// Registers a new user.
     /// </summary>
     /// <param name="userDto">User object containing registration data.</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>
     /// <para><b>200 OK</b> - Registration successful.</para>
     /// <para><b>400 Bad Request</b> - Invalid input data.</para>
@@ -27,16 +28,8 @@ public class RegistrationController(IMediator mediator) : ControllerBase
     [SwaggerResponse(200, "Success", typeof(RegisterPostResponseDTO))]
     [SwaggerResponse(400, "BadRequest", typeof(RegisterPostResponseDTO))]
     [SwaggerResponse(500, "Server error", typeof(string))]
-    public async Task<IActionResult> Register([FromBody] UserRequestDTO userDto)
+    public async Task<IActionResult> Register([FromBody] UserRequestDto userDto, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(userDto.Email) ||
-            string.IsNullOrWhiteSpace(userDto.Password) ||
-            userDto.CountryId <= 0 ||
-            userDto.ProvinceId <= 0)
-        {
-            return BadRequest(new RegisterPostResponseDTO { Errors = "Invalid data.", IsError = true });
-        }
-
         var command = new CreateUserCommand
         {
             Email = userDto.Email,
@@ -44,8 +37,7 @@ public class RegistrationController(IMediator mediator) : ControllerBase
             CountryId = userDto.CountryId,
             ProvinceId = userDto.ProvinceId
         };
-
-        var createdUser = await mediator.Send(command);
+        _ = await mediator.Send(command, cancellationToken);
         return Ok(new RegisterPostResponseDTO { Message = "User registered successfully", Success = true });
     }
 }

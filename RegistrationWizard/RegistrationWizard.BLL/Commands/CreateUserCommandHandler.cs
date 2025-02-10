@@ -9,9 +9,9 @@ namespace RegistrationWizard.BLL.Commands;
 /// <summary>
 /// Command handler for creating a new user.
 /// </summary>
-public class CreateUserCommandHandler(UserManager<AppUser> userManager, IMapper mapper) : IRequestHandler<CreateUserCommand, UserRequestDTO>
+public class CreateUserCommandHandler(UserManager<AppUser> userManager, IMapper mapper) : IRequestHandler<CreateUserCommand, UserRequestDto>
 {
-    public async Task<UserRequestDTO> Handle(CreateUserCommand responce, CancellationToken cancellationToken)
+    public async Task<UserRequestDto> Handle(CreateUserCommand responce, CancellationToken cancellationToken)
     {
         var user = new AppUser
         {
@@ -28,7 +28,7 @@ public class CreateUserCommandHandler(UserManager<AppUser> userManager, IMapper 
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
             throw new Exception($"User creation failed: {errors}");
         }
-        var request = mapper.Map<UserRequestDTO>(user);
+        var request = mapper.Map<UserRequestDto>(user);
         return request;
     }
 }

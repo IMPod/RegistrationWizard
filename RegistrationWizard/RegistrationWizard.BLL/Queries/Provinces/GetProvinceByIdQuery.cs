@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RegistrationWizard.BLL.DTOs;
 
-namespace RegistrationWizard.BLL.Queryes.Provinces;
+namespace RegistrationWizard.BLL.Queries.Provinces;
 
 /// <summary>
 /// Query to retrieve a province by its identifier.

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RegistrationWizard.BLL.DTOs;
-using RegistrationWizard.BLL.Queryes.Countries;
-using RegistrationWizard.BLL.Queryes.Provinces;
-using RegistrationWizard.Controllers;
+using RegistrationWizard.BLL.Queries.Countries;
+using RegistrationWizard.BLL.Queries.Provinces;
+using RegistrationWizard.Server.Controllers;
 
 namespace RegistrationWizard.Tests;
 
@@ -38,20 +38,24 @@ public class CountriesControllerTests
                     }
                 }
             };
-
+        var request = new BaseResponseDto<CountryResponseDTO>()
+        {
+            Data = sampleCountries.ToList()
+        };
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetAllCountriesQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(sampleCountries);
+            .ReturnsAsync(request);
 
         var controller = new CountriesController(mediatorMock.Object);
+        var cancellationToken = new CancellationToken();
 
         // Act
-        var actionResult = await controller.GetCountries();
+        var actionResult = await controller.GetCountries(cancellationToken);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
 
-        var baseResponse = Assert.IsType<BaseResponseDTO<CountryResponseDTO>>(okResult.Value);
+        var baseResponse = Assert.IsType<BaseResponseDto<CountryResponseDTO>>(okResult.Value);
         Assert.NotNull(baseResponse.Data);
         Assert.Equal(2, baseResponse.Data.Count);
 
@@ -73,20 +77,26 @@ public class CountriesControllerTests
                 new() { Id = 2, Name = "Province A2", CountryId = 1 }
             };
 
+        var request = new BaseResponseDto<ProvinceResponceDTO>()
+        {
+            Data = sampleProvinces.ToList()
+        };
+
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetProvincesByCountryIdQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(sampleProvinces);
+            .ReturnsAsync(request);
 
         var controller = new CountriesController(mediatorMock.Object);
         int testCountryId = 1;
+        var cancellationToken = new CancellationToken();
 
         // Act
-        var actionResult = await controller.GetProvincesByCountry(testCountryId);
+        var actionResult = await controller.GetProvincesByCountry(testCountryId, cancellationToken);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
 
-        var baseResponse = Assert.IsType<BaseResponseDTO<ProvinceResponceDTO>>(okResult.Value);
+        var baseResponse = Assert.IsType<BaseResponseDto<ProvinceResponceDTO>>(okResult.Value);
         Assert.NotNull(baseResponse.Data);
         Assert.Equal(2, baseResponse.Data.Count);
         Assert.All(baseResponse.Data, p => Assert.Equal(testCountryId, p.CountryId));
@@ -103,9 +113,10 @@ public class CountriesControllerTests
             .ThrowsAsync(new Exception("Test exception"));
 
         var controller = new CountriesController(mediatorMock.Object);
+        var cancellationToken = new CancellationToken();
 
         // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => controller.GetCountries());
+        await Assert.ThrowsAsync<Exception>(() => controller.GetCountries(cancellationToken));
     }
 
 }

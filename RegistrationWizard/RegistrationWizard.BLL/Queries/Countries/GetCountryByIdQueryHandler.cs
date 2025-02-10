@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using RegistrationWizard.BLL.DTOs;
 
-namespace RegistrationWizard.BLL.Queryes.Countries;
+namespace RegistrationWizard.BLL.Queries.Countries;
 
 /// <summary>
 /// Query handler to retrieve a country by its identifier.

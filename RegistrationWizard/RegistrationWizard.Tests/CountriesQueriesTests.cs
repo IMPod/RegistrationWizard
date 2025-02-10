@@ -1,4 +1,4 @@
-﻿using RegistrationWizard.BLL.Queryes.Countries;
+﻿using RegistrationWizard.BLL.Queries.Countries;
 
 namespace RegistrationWizard.Tests
 {
@@ -20,9 +20,9 @@ namespace RegistrationWizard.Tests
 
             // Assert
             Assert.NotNull(result);              
-            Assert.NotEmpty(result);            
+            Assert.NotEmpty(result.Data);            
 
-            var countryA = result.FirstOrDefault(c => c.Id == 1);
+            var countryA = result.Data.FirstOrDefault(c => c.Id == 1);
             Assert.NotNull(countryA);
             Assert.False(string.IsNullOrEmpty(countryA.Name));
 

@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RegistrationWizard.BLL.DTOs;
 using RegistrationWizard.BLL.Commands;
-using RegistrationWizard.Controllers;
 using RegistrationWizard.DAL;
 using RegistrationWizard.DAL.Models;
 using RegistrationWizard.BLL.Mapper;
+using RegistrationWizard.Server.Controllers;
 
 namespace RegistrationWizard.FunctionalTests
 {
@@ -42,16 +42,17 @@ namespace RegistrationWizard.FunctionalTests
             var mediator = provider.GetRequiredService<IMediator>();
             var controller = new RegistrationController(mediator);
 
-            var validUserRequest = new UserRequestDTO
+            var validUserRequest = new UserRequestDto
             {
                 Email = "test@example.com",
                 Password = "ZXasqw12!@",
                 CountryId = 1,
                 ProvinceId = 2
             };
+            var cancellationToken = new CancellationToken();
 
             // Act
-            var result = await controller.Register(validUserRequest);
+            var result = await controller.Register(validUserRequest, cancellationToken);
 
             // Assert 
             var okResult = Assert.IsType<OkObjectResult>(result);

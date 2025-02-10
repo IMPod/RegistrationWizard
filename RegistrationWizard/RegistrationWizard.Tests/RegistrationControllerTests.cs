@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using RegistrationWizard.BLL.Commands;
 using RegistrationWizard.BLL.DTOs;
-using RegistrationWizard.Controllers;
+using RegistrationWizard.Server.Controllers;
 
 namespace RegistrationWizard.Tests;
 
@@ -16,16 +16,16 @@ public class RegistrationControllerTests
         var mediatorMock = new Mock<IMediator>();
         var controller = new RegistrationController(mediatorMock.Object);
 
-        var invalidUserRequest = new UserRequestDTO
+        var invalidUserRequest = new UserRequestDto
         {
             Email = "",
             Password = "",
             CountryId = 0,
             ProvinceId = 0
         };
-
+        var cancellationToken = new CancellationToken();
         // Act
-        var result = await controller.Register(invalidUserRequest);
+        var result = await controller.Register(invalidUserRequest, cancellationToken);
 
         // Assert
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -43,7 +43,7 @@ public class RegistrationControllerTests
 
         mediatorMock
             .Setup(m => m.Send(It.IsAny<CreateUserCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new UserRequestDTO
+            .ReturnsAsync(new UserRequestDto
             {
                 Email = "test@example.com",
                 Password = "password",
@@ -53,16 +53,17 @@ public class RegistrationControllerTests
 
         var controller = new RegistrationController(mediatorMock.Object);
 
-        var validUserRequest = new UserRequestDTO
+        var validUserRequest = new UserRequestDto
         {
             Email = "test@example.com",
             Password = "password",
             CountryId = 1,
             ProvinceId = 1
         };
+        var cancellationToken = new CancellationToken();
 
         // Act
-        var result = await controller.Register(validUserRequest);
+        var result = await controller.Register(validUserRequest, cancellationToken);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);

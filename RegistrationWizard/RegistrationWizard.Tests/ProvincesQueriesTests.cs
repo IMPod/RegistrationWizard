@@ -1,4 +1,4 @@
-﻿using RegistrationWizard.BLL.Queryes.Provinces;
+﻿using RegistrationWizard.BLL.Queries.Provinces;
 
 namespace RegistrationWizard.Tests;
 
@@ -19,8 +19,8 @@ public class ProvincesQueriesTests
         var provinces = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(provinces);
-        Assert.True(provinces.Count() >= 4);
+        Assert.NotNull(provinces.Data);
+        Assert.True(provinces.Data.Count() >= 4);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class ProvincesQueriesTests
         var provinces = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(provinces);
-        Assert.Equal(2, provinces.Count());
+        Assert.NotNull(provinces.Data);
+        Assert.Equal(2, provinces.Data.Count());
     }
 }

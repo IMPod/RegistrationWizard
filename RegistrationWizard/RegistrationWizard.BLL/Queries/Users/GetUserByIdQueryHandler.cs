@@ -3,7 +3,7 @@ using RegistrationWizard.DAL.Models;
 using RegistrationWizard.DAL;
 using Microsoft.EntityFrameworkCore;
 
-namespace RegistrationWizard.BLL.Queryes.Users;
+namespace RegistrationWizard.BLL.Queries.Users;
 
 /// <summary>
 /// Query handler to retrieve a user by its identifier.

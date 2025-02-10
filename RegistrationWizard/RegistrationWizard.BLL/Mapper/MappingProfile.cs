@@ -8,9 +8,9 @@ namespace RegistrationWizard.BLL.Mapper
     {
         public MappingProfile()
         {
-            CreateMap<AppUser, UserRequestDTO>();
+            CreateMap<AppUser, UserRequestDto>();
 
-            CreateMap<UserRequestDTO, AppUser>();
+            CreateMap<UserRequestDto, AppUser>();
 
             CreateMap<Country, CountryResponseDTO>()
             .ForMember(dest => dest.Provinces, opt => opt.MapFrom(src => src.Provinces));

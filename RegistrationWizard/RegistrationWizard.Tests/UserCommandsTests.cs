@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RegistrationWizard.DAL;
 using RegistrationWizard.DAL.Models;
 using RegistrationWizard.BLL.Commands;
-using RegistrationWizard.BLL.Queryes.Users;
+using RegistrationWizard.BLL.Queries.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
