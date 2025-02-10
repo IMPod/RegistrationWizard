@@ -3,6 +3,7 @@ using RegistrationWizard.DAL;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using RegistrationWizard.BLL.DTOs;
+using AutoMapper.QueryableExtensions;
 
 namespace RegistrationWizard.BLL.Queries.Provinces;
 
@@ -13,11 +14,10 @@ public class GetAllProvincesQueryHandler(RegistrationContext context, IMapper ma
 {
     public async Task<BaseResponseDto<ProvinceResponceDTO>> Handle(GetAllProvincesQuery request, CancellationToken cancellationToken)
     {
-
-        var provinces = await context.Provinces
-           .ToListAsync(cancellationToken);
-
-        var resultDto = mapper.Map<List<ProvinceResponceDTO>>(provinces);
+        var resultDto = await context.Provinces
+            .AsNoTracking()
+            .ProjectTo<ProvinceResponceDTO>(mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
 
         var response = new BaseResponseDto<ProvinceResponceDTO>()
         {

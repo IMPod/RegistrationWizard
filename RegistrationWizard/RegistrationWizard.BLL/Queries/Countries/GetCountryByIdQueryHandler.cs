@@ -2,6 +2,7 @@
 using RegistrationWizard.DAL;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using RegistrationWizard.BLL.DTOs;
 
 namespace RegistrationWizard.BLL.Queries.Countries;
@@ -13,11 +14,11 @@ public class GetCountryByIdQueryHandler(RegistrationContext context, IMapper map
 {
     public async Task<CountryResponseDTO?> Handle(GetCountryByIdQuery request, CancellationToken cancellationToken)
     {
-        var country = await context.Countries
-            .Include(c => c.Provinces)
-            .FirstOrDefaultAsync(c => c.Id == request.CountryId, cancellationToken);
-
-        var resultDto = mapper.Map<CountryResponseDTO>(country);
+        var resultDto = await context.Countries
+            .AsNoTracking() 
+            .Where(c => c.Id == request.CountryId)
+            .ProjectTo<CountryResponseDTO>(mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
 
         return resultDto;
     }
