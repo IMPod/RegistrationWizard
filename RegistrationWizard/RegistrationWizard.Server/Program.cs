@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RegistrationWizard.BLL.Mapper;
@@ -98,3 +97,5 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
+
+public partial class Program { }
