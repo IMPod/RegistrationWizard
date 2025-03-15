@@ -9,7 +9,7 @@ public class ProvincesQueriesTests
     {
         // Arrange
         var dbName = Guid.NewGuid().ToString();
-        using var context = InMemoryContextFactory.CreateContext(dbName);
+        await using var context = InMemoryContextFactory.CreateContext(dbName);
         var mapper = InMemoryContextFactory.CreateMapper();
 
         var handler = new GetAllProvincesQueryHandler(context, mapper);
@@ -28,7 +28,7 @@ public class ProvincesQueriesTests
     {
         // Arrange
         var dbName = Guid.NewGuid().ToString();
-        using var context = InMemoryContextFactory.CreateContext(dbName);
+        await using var context = InMemoryContextFactory.CreateContext(dbName);
         var mapper = InMemoryContextFactory.CreateMapper();
         var handler = new GetProvinceByIdQueryHandler(context, mapper);
         var query = new GetProvinceByIdQuery(1);
@@ -46,7 +46,7 @@ public class ProvincesQueriesTests
     {
         // Arrange
         var dbName = Guid.NewGuid().ToString();
-        using var context = InMemoryContextFactory.CreateContext(dbName);
+        await using var context = InMemoryContextFactory.CreateContext(dbName);
         var mapper = InMemoryContextFactory.CreateMapper();
         var handler = new GetProvinceByIdQueryHandler(context, mapper);
         var query = new GetProvinceByIdQuery(999);
@@ -63,7 +63,7 @@ public class ProvincesQueriesTests
     {
         // Arrange
         var dbName = Guid.NewGuid().ToString();
-        using var context = InMemoryContextFactory.CreateContext(dbName);
+        await using var context = InMemoryContextFactory.CreateContext(dbName);
         var mapper = InMemoryContextFactory.CreateMapper();
         var handler = new GetProvincesByCountryIdQueryHandler(context, mapper);
         var query = new GetProvincesByCountryIdQuery(1);
